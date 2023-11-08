@@ -1,0 +1,346 @@
+{
+    "General": {
+        "track": "conference",
+        "general_fine_tuned_path": "./store/general_fine_tune/",
+        "general_pair_tuned_path": "./store/general_pair_tune/",
+        "general_pair_tuned_path_2": "./store/general_path_2/",
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "///model": "gsarti/biobert-nli",
+        "//model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+
+        "//tokenizer": "emilyalsentzer/Bio_ClinicalBERT",
+
+        "metrics_folder": "./OntologyAlignment/tensorboard/"
+    },
+    "conference": {
+            "ontologies_folder" : "./Documents/datasets/conference/ontologies",
+            "alignments_folder" : "./Documents/datasets/conference/alignments",
+    
+            "//ontologies_folder": "/home/francis/Documents/School/master/projects/datasets/conference/ontologies/",
+            "//alignments_folder": "/home/francis/Documents/School/master/projects/datasets/conference/alignments/",
+    
+            "fine_tuned_path" : "./store/conference_MLM_pretrained/",
+            "pair_tuned_path" : "./store/conference_pair_trained/",
+            
+            "parsing_parameters": {
+                "use_label" : 1,
+                "autocorrect": 1,
+                "synonym_extension": 0,
+                "accronym_resolution": 1
+            }
+        },
+    "anatomy": {
+        "ontologies_folder" : "./Documents/datasets/anatomy/ontologies",
+        "alignments_folder" : "./Documents/datasets/anatomy/alignments",
+    
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,
+            "exclude_classes" : ["SynonymType", "Synonym", "Subset", "ObsoleteClass", "Definition", "DbXref"],
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "subclass_of_properties": ["UNDEFINED_part_of"] 
+            }
+        },
+    
+     "largebio":{
+    
+    
+        "ontologies_folder": "./Documents/datasets/largebio/ontologies",
+        "alignments_folder": "./Documents/datasets/largebio/alignments",
+    
+        "ontologies" : ["oaei_FMA_small_overlapping_nci.owl", "oaei_NCI_small_overlapping_fma.owl"],
+        "alignments" : ["oaei_FMA2NCI_UMLS_mappings_with_flagged_repairs.rdf"],
+    
+        "parsing_parameters":
+            {
+            "use_label": 0,
+            "use_synonyms": 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "exclude_classes": ["fmaOwlDlComponent_2_0"]
+            }
+    
+    
+    },
+
+    "schema_org": {
+        "ontologies_folder" : "./Documents/datasets/schema_org/ontologies",
+
+
+        "parsing_parameters": {
+            "use_label" : 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0
+        }
+    },
+
+    "foodon": {
+        "ontologies_folder" : "./Documents/datasets/foodon/ontologies",
+        "alignments_folder" : "./Documents/datasets/foodon/alignments",
+        "ontologies_in_alignment": ["foodon-merged.train", "foodon-merged.train"],
+
+        "parsing_parameters": {
+            "use_label" : 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0
+        }
+    },
+
+    "go": {
+        "ontologies_folder" : "./Documents/datasets/go/ontologies",
+        "alignments_folder" : "./Documents/datasets/go/alignments",
+        "ontologies_in_alignment": ["go.train", "go.train"],
+
+        "parsing_parameters": {
+            "use_label" : 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0
+        }
+    },
+
+    "bioml_neoplas":{
+
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/snomed-ncit.neoplas",
+        "alignments_folder": "./Documents/datasets/bio-ml/snomed-ncit.neoplas/refs_equiv/",
+    
+        "ontologies_in_alignment": ["snomed.neoplas", "ncit.neoplas"],
+        "ontologies" : ["snomed.neoplas.owl", "ncit.neoplas.owl"],
+        "alignments" : ["train.tsv"],
+        "test_alignments": "test.tsv",
+        
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0       
+            }
+    
+    
+        },
+
+    "bioml_neoplas_subs":{
+
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/snomed-ncit.neoplas",
+        "alignments_folder": "./Documents/datasets/bio-ml/snomed-ncit.neoplas/refs_subs/",
+    
+        "ontologies_in_alignment": ["snomed.neoplas", "ncit.neoplas"],
+        "ontologies" : ["snomed.neoplas.owl", "ncit.neoplas.owl"],
+        "alignments" : ["train.tsv"],
+        "candidates": ["test.cands.tsv"],
+        "test_alignments": "test.cands.tsv",
+
+        "fine_tuned_path" : "./store/bioml_neoplas_MLM_pretrained",
+        "pair_tuned_path" : "./store/bioml_neoplas_pair_tune_60",
+        
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0       
+            }
+    
+    
+        },
+
+    "bioml_body":{
+
+
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/snomed-fma.body",
+        "alignments_folder": "./Documents/datasets/bio-ml/snomed-fma.body/refs_equiv/",
+    
+        "ontologies_in_alignment": ["snomed.body", "fma.body"],
+        "ontologies" : ["snomed.body.owl", "fma.body.owl"],
+        "alignments" : ["train.tsv"],
+        "test_alignments": "test.tsv",
+
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,       
+            "subclass_of_properties": "all" 
+            }
+    
+    
+        },
+
+    "bioml_body_subs":{
+
+
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/snomed-fma.body",
+        "alignments_folder": "./Documents/datasets/bio-ml/snomed-fma.body/refs_subs/",
+    
+        "ontologies_in_alignment": ["snomed.body", "fma.body"],
+        "ontologies" : ["snomed.body.owl", "fma.body.owl"],
+        "alignments" : ["train.tsv"],
+        "candidates": ["test.cands.tsv"],
+        "test_alignments": "test.cands.tsv",
+
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,
+            "subclass_of_properties": "all"      
+            }
+    
+    
+        },
+
+    "bioml_pharm":{
+
+
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/snomed-ncit.pharm",
+        "alignments_folder": "./Documents/datasets/bio-ml/snomed-ncit.pharm/refs_equiv/",
+    
+        "ontologies_in_alignment": ["snomed.pharm", "ncit.pharm"],
+        "ontologies" : ["snomed.pharm.owl", "ncit.pharm.owl"],
+        "alignments" : ["train.tsv"],
+        "test_alignments": "test.tsv",
+
+
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1       
+            }
+    
+    
+        },
+
+        "bioml_pharm_subs":{
+
+
+
+            "ontologies_folder": "./Documents/datasets/bio-ml/snomed-ncit.pharm",
+            "alignments_folder": "./Documents/datasets/bio-ml/snomed-ncit.pharm/refs_subs/",
+        
+            "ontologies_in_alignment": ["snomed.pharm", "ncit.pharm"],
+            "ontologies" : ["snomed.pharm.owl", "ncit.pharm.owl"],
+            "alignments" : ["train.tsv"],
+            "candidates": ["test.cands.tsv"],
+            "test_alignments": "test.cands.tsv",    
+    
+            "parsing_parameters":
+                {
+                "use_label": 1,
+                "use_synonyms": 1       
+                }
+        
+        
+            },
+
+    "bioml_ordo":{
+
+
+            "ontologies_folder": "./Documents/datasets/bio-ml/omim-ordo",
+            "alignments_folder": "./Documents/datasets/bio-ml/omim-ordo/refs_equiv/",
+        
+            "ontologies_in_alignment": ["omim", "ordo"],
+            "ontologies" : ["omim.owl", "ordo.owl"],
+            "alignments" : ["train.tsv"],
+            "test_alignments": "test.tsv",
+    
+            "parsing_parameters":
+                {
+                "use_label": 1,
+                "use_synonyms": 1,
+                "autocorrect": 0,
+                "synonym_extension": 0,
+                "accronym_resolution": 0,
+                "subclass_of_properties": ["BFO_0000050"]         
+                }
+        
+        
+            },
+    "bioml_ordo_subs":{
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/omim-ordo",
+        "alignments_folder": "./Documents/datasets/bio-ml/omim-ordo/refs_subs/",
+    
+        "ontologies_in_alignment": ["omim", "ordo"],
+        "ontologies" : ["omim.owl", "ordo.owl"],
+        "alignments" : ["train.tsv"],
+        "candidates": ["test.cands.tsv"],
+        "test_alignments": "test.cands.tsv",
+        
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0,
+            "subclass_of_properties": "all"         
+            }
+    
+    
+        },
+
+
+    "bioml_doid":{
+
+
+        "ontologies_folder": "./Documents/datasets/bio-ml/ncit-doid",
+        "alignments_folder": "./Documents/datasets/bio-ml/ncit-doid/refs_equiv/",
+    
+        "ontologies_in_alignment": ["ncit", "doid"],
+        "ontologies" : ["doid.owl", "ncit.owl"],
+        "alignments" : ["train.tsv"],
+        "test_alignments": "test.tsv",
+
+        "parsing_parameters":
+            {
+            "use_label": 1,
+            "use_synonyms": 1,
+            "autocorrect": 0,
+            "synonym_extension": 0,
+            "accronym_resolution": 0         
+            }
+    
+    
+        },
+
+        "bioml_doid_subs":{
+
+
+            "ontologies_folder": "./Documents/datasets/bio-ml/ncit-doid",
+            "alignments_folder": "./Documents/datasets/bio-ml/ncit-doid/refs_subs/",
+        
+            "ontologies_in_alignment": ["ncit", "doid"],
+            "ontologies" : ["doid.owl", "ncit.owl"],
+            "alignments" : ["train.tsv"],
+            "candidates": ["test.cands.tsv"],
+            "test_alignments": "test.cands.tsv",
+            
+            "type": "SUBS",
+    
+            "parsing_parameters":
+                {
+                "use_label": 1,
+                "use_synonyms": 1,
+                "autocorrect": 0,
+                "synonym_extension": 0,
+                "accronym_resolution": 0         
+                }
+        
+        
+            }
+
+            
+}
+    
+    
+    

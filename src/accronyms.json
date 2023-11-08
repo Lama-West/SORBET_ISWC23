@@ -1,0 +1,21 @@
+{
+      "AP": "Accepted Paper",
+      "CM": "Committee Member",
+      "RP": "Rejected Paper",
+      "CP": "Conference Participant",
+      "PC": "Program Committee",
+      "SC": "Session Chair",
+      "CR": "Camera Ready",
+      "OC": "Organizing Committee",
+      "AS": "Abstract Submission",
+      "PS": "Paper Submission",
+      "RF": "Registration Fee",
+      "PCM": "Program Committee Member",
+      "NE": "Notification Email",
+      "FP": "Full Paper",
+      "CT": "Communications Topic",
+      "RQ": "Review Question",
+      "CN": "Computer Networks",
+      "SD": "Start Date",
+      "ED": "End Date"
+}
