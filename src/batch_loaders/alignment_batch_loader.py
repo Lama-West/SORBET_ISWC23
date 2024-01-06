@@ -10,14 +10,15 @@ from .alignment import Alignment, AlignmentDataset
 from .ontology_parsing.ontology_config import OntoConfig
 from .ontology_parsing.ontology import Ontology
 from models.tf_idf_similarity import SubTokenSimilarity
-from .random_walk import RandomWalk, RandomWalkConfig
+from .random_walk import TreeWalk, TreeWalkConfig
 from globals import Globals
 
-# device = "cpu"
+import logging
 
+logger = logging.getLogger("onto")
 
 class AlignmentBatchLoader:
-    def __init__(self, ontologies_map, batch_size=64, n_alignments_per_batch=32, shuffle=True, apply_masks=True ,walk_config:RandomWalkConfig = None, **kwargs):
+    def __init__(self, ontologies_map, batch_size=64, n_alignments_per_batch=32, shuffle=True, apply_masks=True ,walk_config:TreeWalkConfig = None, **kwargs):
 
         self.batch_size = batch_size
         self.n_alignments_per_batch = n_alignments_per_batch
@@ -32,9 +33,9 @@ class AlignmentBatchLoader:
 
     def build_inputs(self, batch_alignments):
         
-        src_random_walks = [RandomWalk(self.ontologies_map[a.source_onto], first_node=a.id1, walk_config=self.walk_config)\
+        src_random_walks = [TreeWalk(self.ontologies_map[a.source_onto], first_node=a.id1, walk_config=self.walk_config)\
                                 .build_pooling_mask().build_mlm_mask(self.apply_masks).build_parent_child_pairs_mask() for a in batch_alignments]
-        trg_random_walks = [RandomWalk(self.ontologies_map[a.target_onto], first_node=a.id2, walk_config=self.walk_config)\
+        trg_random_walks = [TreeWalk(self.ontologies_map[a.target_onto], first_node=a.id2, walk_config=self.walk_config)\
                                 .build_pooling_mask().build_mlm_mask(self.apply_masks).build_parent_child_pairs_mask() for a in batch_alignments]
             
         source_inputs = Globals.tokenizer([w.sentence for w in src_random_walks], return_tensors='pt',
@@ -256,12 +257,19 @@ class SemiNegativeSampling(AlignmentBatchLoader):
         super().__init__(ontologies_map, **kwargs)
         
         self.epoch_over_alignments = epoch_over_alignments
+        self.iir = iir
+
         self.no_hard_negative_samples = no_hard_negative_samples
 
         self.alignments = train_positive_alignments
         self.positive_intra_dataset = [(id, onto) for onto in self.ontologies_map for id in self.ontologies_map[onto].classes]
 
-        self.iir = iir
+        if len(self.alignments):
+            self.iir = 0.
+            self.epoch_over_alignments = False
+            if (iir > 0.) or epoch_over_alignments:
+                logger.warning("No inter positive alignments found, setting iir to 0, and epoch_over_alignments to False")
+
         self.inter_soft_r = inter_soft_r
         self.intra_soft_r = intra_soft_r
         self.idx_positive = -1

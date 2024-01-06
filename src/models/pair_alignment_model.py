@@ -28,7 +28,7 @@ from losses.CosineSimilarityLoss import CosineSimilarityLoss
 from losses.ClassificationObjectiveLoss import ClassificationObjectiveLoss
 from batch_loaders.pair_alignment_batch_loader import MatrixRefinementBatchLoader, PairAlignmentBatchLoader
 from models.mlm_model import MLMOntoBert
-from models.siamese_model import SiameseOntoBert
+from models.sorbet import SORBET
 from globals import Globals
 
 

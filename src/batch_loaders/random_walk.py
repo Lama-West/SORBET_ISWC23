@@ -82,21 +82,26 @@ class WalkStrategy(Enum):
     LINEAGE_PATH_PLUS_CHILDS = 3
     LINEAGE_PATH = 4
     
-class RandomWalkConfig():
-     def __init__(self, n_branches=None, max_path_length=None, strategy: WalkStrategy = WalkStrategy.ANY, use_synonyms=False):
+class TreeWalkConfig():
+    def __init__(self, n_branches=(0,5), max_path_length=None, strategy: WalkStrategy = WalkStrategy.ANY, use_synonyms=False):
         
-        if n_branches is None:
-            n_branches = random.randint(0,3)
 
         self.n_branches = n_branches
         self.strategy = strategy
         self.max_path_length = max_path_length
         self.use_synonyms = use_synonyms
 
+    def get_n_branches(self):
+        if isinstance(self.n_branches, int):
+            return self.n_branches
+        elif isinstance(self.n_branches, (tuple, list)) and len(self.n_branches) == 2:
+            return random.randint(self.n_branches[0], self.n_branches[1])
+        else:
+            raise ValueError("n_branches should either be an integer or a range (min_branches, max_branches)")
 
 
-class RandomWalk():
-    def __init__(self, onto, first_node=None, walk_config: RandomWalkConfig=None):
+class TreeWalk():
+    def __init__(self, onto, first_node=None, walk_config: TreeWalkConfig=None):
         """
         Makes a walk in the ontology with paths types in probabilities
         """
@@ -104,7 +109,7 @@ class RandomWalk():
 
 
         if walk_config is None:
-            walk_config = RandomWalkConfig()
+            walk_config = TreeWalkConfig()
 
         if first_node is None:
             first_node = random.choice(list(set(onto.classes) - {"Thing"}))
@@ -113,7 +118,9 @@ class RandomWalk():
                 len(onto.get_object_properties(first_node))) == 0:
                 first_node = random.choice(list(set(onto.classes) - {"Thing"}))
 
-        if walk_config.n_branches == 0:
+        n_branches = walk_config.get_n_branches()
+
+        if n_branches == 0:
             walk_ids = [first_node]
             self.branches_index = [0]
         else:
@@ -122,9 +129,8 @@ class RandomWalk():
 
 
         visited_nodes = set({})
-        one_khop_neighbours = set()
 
-        for i in range(walk_config.n_branches):
+        for i in range(n_branches):
             
             # Check if adding a branch is possible
             
@@ -303,8 +309,8 @@ class RandomWalk():
 
 
 
-class PairRandomWalk():
-    def __init__(self, src_walk: RandomWalk, trg_walk: RandomWalk) -> None:
+class PairTreeWalk():
+    def __init__(self, src_walk: TreeWalk, trg_walk: TreeWalk) -> None:
         self.src_walk = src_walk
         self.trg_walk = trg_walk
 

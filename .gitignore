@@ -47,3 +47,12 @@ dist/**
 *.xlf
 package.nls.*.json
 l10n/
+*.owl
+*.rdf
+*.tsv
+*.csv
+*.zip
+**/cache
+**/debug/**
+**/SORBET
+accronyms.json

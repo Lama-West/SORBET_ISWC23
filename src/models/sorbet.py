@@ -35,7 +35,7 @@ import logging
 
 logger = logging.getLogger("onto")
 
-class SiameseOntoBert(BaseModel):
+class SORBET(BaseModel):
     def __init__(self, from_pretrained="emilyalsentzer/Bio_ClinicalBERT",  pooling_strategy="only_concept", 
                        loss_fnc="cosine_loss", freeze_embeddings=False) -> None:
         super().__init__()

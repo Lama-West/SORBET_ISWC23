@@ -33,7 +33,10 @@ class Track():
         self.alignments = []
         self.train_alignments = []
         
+        self.has_alignments = False
+
         if "alignments_folder" in track_config:
+            self.has_alignments = True
             self.load_alignments(track_config)
 
                     
@@ -107,6 +110,10 @@ class Track():
 
 
     def split_train_test(self, test_size, consider_train_set=False):
+        if not self.has_alignments:
+            self.train_alignments = []
+            self.test_alignments = []
+            
         if "test_alignments" in self.track_config:
             return
 
@@ -147,7 +154,7 @@ class Track():
         new_track.alignments = self.alignments + other_track.alignments
         new_track.train_alignments = self.train_alignments + other_track.train_alignments
         new_track.alignment_per_dataset = self.alignment_per_dataset + other_track.alignment_per_dataset
-
+        new_track.has_alignments = self.has_alignments or other_track.has_alignments
 
         return new_track
     

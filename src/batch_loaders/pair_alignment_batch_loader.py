@@ -10,20 +10,20 @@ from .alignment_batch_loader import AlignmentBatchLoader, SemiNegativeSampling
 from .alignment import Alignment, AlignmentDataset
 from .ontology_parsing.ontology_config import OntoConfig
 from .ontology_parsing.ontology import Ontology
-from .random_walk import RandomWalk, PairRandomWalk, RandomWalkConfig
+from .random_walk import TreeWalk, PairTreeWalk, TreeWalkConfig
 import logging
 
 class PairAlignmentBatchLoader(SemiNegativeSampling):
-    def __init__(self, walk_config: RandomWalkConfig=None, **kwargs):
+    def __init__(self, walk_config: TreeWalkConfig=None, **kwargs):
         super().__init__(**kwargs)
 
         self.walk_config = walk_config
 
     def build_inputs(self, batch_alignments):
 
-        random_walks_pairs = [PairRandomWalk(\
-                                RandomWalk(self.ontologies_map[a.source_onto], first_node=a.id1, walk_config=self.walk_config),\
-                                RandomWalk(self.ontologies_map[a.target_onto], first_node=a.id2, walk_config=self.walk_config))\
+        random_walks_pairs = [PairTreeWalk(\
+                                TreeWalk(self.ontologies_map[a.source_onto], first_node=a.id1, walk_config=self.walk_config),\
+                                TreeWalk(self.ontologies_map[a.target_onto], first_node=a.id2, walk_config=self.walk_config))\
                               .build_pooling_mask()\
                               .build_mlm_mask()\
                               for a in batch_alignments]
@@ -80,7 +80,7 @@ class SiameseEmbeddingsBatchLoader:
 
 class MatrixRefinementBatchLoader:
     def __init__(self, ontologies_map, similarities, topk, src_onto, 
-                trg_onto, src_keys, trg_keys, exclude_indices=None, batch_size=64, walk_config:RandomWalkConfig = None) -> None:
+                trg_onto, src_keys, trg_keys, exclude_indices=None, batch_size=64, walk_config:TreeWalkConfig = None) -> None:
 
         self.walk_config = walk_config
         self.batch_size = batch_size
@@ -111,9 +111,9 @@ class MatrixRefinementBatchLoader:
         batch_indices = self.indices[(idx*self.batch_size) : min((idx+1)*self.batch_size, len(self.indices) )]
         batch_alignments = [Alignment(self.src_onto, self.trg_onto, self.src_keys[i], self.trg_keys[j]) for i, j in batch_indices]
 
-        random_walks_pairs = [PairRandomWalk(\
-                                RandomWalk(self.ontologies_map[a.source_onto], first_node=a.id1, walk_config=self.walk_config),\
-                                RandomWalk(self.ontologies_map[a.target_onto], first_node=a.id2, walk_config=self.walk_config))
+        random_walks_pairs = [PairTreeWalk(\
+                                TreeWalk(self.ontologies_map[a.source_onto], first_node=a.id1, walk_config=self.walk_config),\
+                                TreeWalk(self.ontologies_map[a.target_onto], first_node=a.id2, walk_config=self.walk_config))
                               for a in batch_alignments]
         
         batch = Globals.tokenizer([w.sentence for w in random_walks_pairs], return_tensors='pt',

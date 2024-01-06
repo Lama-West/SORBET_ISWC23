@@ -5,11 +5,11 @@ import torch
 from math import ceil
 from globals import Globals
 
-from .random_walk import RandomWalk, RandomWalkConfig
+from .random_walk import TreeWalk, TreeWalkConfig
 
 
 class RandomTreeWalkBatchLoader(torch.utils.data.Dataset):
-    def __init__(self, ontologies=None, batch_size = 16, walk_config: RandomWalkConfig = None, **kwargs):
+    def __init__(self, ontologies=None, batch_size = 16, walk_config: TreeWalkConfig = None, **kwargs):
         self.batch_size = batch_size
         self.ontos = ontologies
 
@@ -31,8 +31,8 @@ class RandomTreeWalkBatchLoader(torch.utils.data.Dataset):
         # Get random ontology with choice weigthed according to ontologies sizes
         batch_nodes = self.nodes_dataset[(idx*self.batch_size) : min((idx+1)*self.batch_size, len(self.nodes_dataset) )]
 
-        # RandomWalk follows the builder pattern
-        random_walks = [RandomWalk(onto, first_node=id, walk_config=self.walk_config)\
+        # TreeWalk follows the builder pattern
+        random_walks = [TreeWalk(onto, first_node=id, walk_config=self.walk_config)\
                             .build_pooling_mask()\
                             .build_mlm_mask() for id, onto in batch_nodes]
 
@@ -81,7 +81,7 @@ class EvaluationTreeWalkBatchLoader():
         self.walk_config = walk_config
 
         if self.walk_config is None:
-            self.walk_config = RandomWalkConfig(n_branches=99, max_path_length=4)
+            self.walk_config = TreeWalkConfig(n_branches=99, max_path_length=4)
             
 
     def __getitem__(self, idx):
@@ -94,8 +94,8 @@ class EvaluationTreeWalkBatchLoader():
         if len(batch_nodes) == 0:
             raise IndexError
 
-        # RandomWalk follows the builder pattern
-        random_walks = [RandomWalk(self.ontology, first_node=id, walk_config = self.walk_config).build_pooling_mask() for id in batch_nodes]
+        # TreeWalk follows the builder pattern
+        random_walks = [TreeWalk(self.ontology, first_node=id, walk_config = self.walk_config).build_pooling_mask() for id in batch_nodes]
 
 
         root_masks = torch.cat([w.root_mask for w in random_walks], dim=0).to(Globals.device)

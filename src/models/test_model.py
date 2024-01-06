@@ -30,7 +30,7 @@ from losses.CosineSimilarityLoss import CosineSimilarityLoss
 from losses.ClassificationObjectiveLoss import ClassificationObjectiveLoss
 from batch_loaders.pair_alignment_batch_loader import MatrixRefinementBatchLoader, PairAlignmentBatchLoader
 from models.mlm_model import MLMOntoBert
-from models.siamese_model import SiameseOntoBert
+from models.sorbet import SORBET
 from globals import Globals
 import math
 
@@ -76,7 +76,7 @@ class TestModel(BaseModel):
         
         self.is_supervised = True
 
-        self.siamese_model = SiameseOntoBert(from_pretrained=from_pretrained)
+        self.sorbet = SORBET(from_pretrained=from_pretrained)
         self.cache = {}
 
         self.loader_type = DAEBatchLoader
@@ -93,18 +93,18 @@ class TestModel(BaseModel):
             if random.random() < 0.5:
                 a.inverse()
 
-            if a.source_onto not in self.siamese_model.embeddings_cache:
-                self.siamese_model.get_embeddings(onto_map[a.source_onto])
-            if a.target_onto not in self.siamese_model.embeddings_cache:
-                self.siamese_model.get_embeddings(onto_map[a.target_onto])
+            if a.source_onto not in self.sorbet.embeddings_cache:
+                self.sorbet.get_embeddings(onto_map[a.source_onto])
+            if a.target_onto not in self.sorbet.embeddings_cache:
+                self.sorbet.get_embeddings(onto_map[a.target_onto])
 
             if x is None:
-                x = self.siamese_model.get_concept_embedding(a.source_onto, a.id1).view(1,-1)
-                y = self.siamese_model.get_concept_embedding(a.target_onto, a.id2).view(1,-1)
+                x = self.sorbet.get_concept_embedding(a.source_onto, a.id1).view(1,-1)
+                y = self.sorbet.get_concept_embedding(a.target_onto, a.id2).view(1,-1)
 
             else:
-                x = torch.cat((x , self.siamese_model.get_concept_embedding(a.source_onto, a.id1).view(1,-1)), 0)
-                y = torch.cat((y , self.siamese_model.get_concept_embedding(a.target_onto, a.id2).view(1,-1)), 0)
+                x = torch.cat((x , self.sorbet.get_concept_embedding(a.source_onto, a.id1).view(1,-1)), 0)
+                y = torch.cat((y , self.sorbet.get_concept_embedding(a.target_onto, a.id2).view(1,-1)), 0)
 
         x_reconstructed = self.model(x)
 
@@ -124,7 +124,7 @@ class TestModel(BaseModel):
         with torch.no_grad():
             for batch_inputs in tqdm(loader, leave=False, total=len(loader), disable=True):
                 
-                inputs = torch.stack([self.siamese_model.get_concept_embedding(ontology.onto_name, id) for id in batch_inputs]).to(Globals.device)
+                inputs = torch.stack([self.sorbet.get_concept_embedding(ontology.onto_name, id) for id in batch_inputs]).to(Globals.device)
 
                 outputs = self.model(inputs)
 
@@ -158,13 +158,13 @@ class TestModel(BaseModel):
         return self.cache[onto.onto_name][root]
 
     def get_embeddings(self, ontology, walk_config=None):
-        return self.siamese_model.get_embeddings(ontology, walk_config)
+        return self.sorbet.get_embeddings(ontology, walk_config)
 
 
 
     def get_similarity_matrix(self, source: Ontology, target: Ontology, walk_config=None):
-        src_embeddings, src_keys = self.siamese_model.get_embeddings(source, walk_config)
-        trg_embeddings, trg_keys = self.siamese_model.get_embeddings(target, walk_config)
+        src_embeddings, src_keys = self.sorbet.get_embeddings(source, walk_config)
+        trg_embeddings, trg_keys = self.sorbet.get_embeddings(target, walk_config)
 
         similarities = F.normalize(src_embeddings,dim=1) @ F.normalize(trg_embeddings,dim=1).t()
         
