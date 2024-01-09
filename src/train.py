@@ -50,7 +50,7 @@ Globals.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 
-writer = SummaryWriter(log_dir=config["General"]["metrics_folder"])
+writer = SummaryWriter("./tensorboard/")
 
 # Pairwise Trainer
 trainer = TrainPipeline(
@@ -59,18 +59,19 @@ trainer = TrainPipeline(
     extra_tracks=None,
 
     # SORBET Training parameters
-    epochs = 20,
-    lr = 1e-4,
-    save_model_checkpoints=-1,
-    save_embeddings_checkpoints=-1,
+    epochs = 60,
+    lr = 1e-6,
+    save_folder = "./store/",
+    save_model_checkpoints = -1,
+    save_embeddings_checkpoints = -1,
 
-    model=SORBET(from_pretrained=config["General"]["model"], pooling_strategy="only_concept"),
+    model = SORBET(from_pretrained="sentence-transformers/all-MiniLM-L6-v2", pooling_strategy="only_concept"),
     train_walks = TreeWalkConfig(n_branches=(0,5), use_synonyms=True),
     loader_config = {
         "iir":0.8, 
         "inter_soft_r":0.5, 
         "intra_soft_r":0.2, 
-        "negative_sampling_strategy": "ontologic_relation",
+        "semi_negative_hop_strategy": "ontologic_relation",
         "no_hard_negative_samples":False,
         "epoch_over_alignments": False,
         "A": 5,

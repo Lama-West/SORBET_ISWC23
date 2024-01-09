@@ -1,18 +1,9 @@
 {
-    "General": {
-        "track": "conference",
-        "general_fine_tuned_path": "./store/general_fine_tune/",
-        "model": "sentence-transformers/all-MiniLM-L6-v2",
-
-        "save_path": "./store/",
-        "metrics_folder": "./tensorboard/"
-    },
     "conference": {
             "ontologies_folder" : "../datasets/conference/ontologies",
             "alignments_folder" : "../datasets/conference/alignments",
     
             "parsing_parameters": {
-                "use_label" : 1,
                 "autocorrect": 1,
                 "synonym_extension": 0,
                 "accronym_resolution": 1
@@ -24,7 +15,6 @@
     
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,
             "exclude_classes" : ["SynonymType", "Synonym", "Subset", "ObsoleteClass", "Definition", "DbXref"],
             "autocorrect": 0,
@@ -44,7 +34,6 @@
     
         "parsing_parameters":
             {
-            "use_label": 0,
             "use_synonyms": 1,
             "autocorrect": 0,
             "synonym_extension": 0,
@@ -58,7 +47,6 @@
         "ontologies_folder" : "../datasets/schema_org/ontologies",
 
         "parsing_parameters": {
-            "use_label" : 1,
             "autocorrect": 0,
             "synonym_extension": 0,
             "accronym_resolution": 0
@@ -71,7 +59,6 @@
         "ontologies_in_alignment": ["foodon-merged.train", "foodon-merged.train"],
 
         "parsing_parameters": {
-            "use_label" : 1,
             "autocorrect": 0,
             "synonym_extension": 0,
             "accronym_resolution": 0
@@ -84,7 +71,6 @@
         "ontologies_in_alignment": ["go.train", "go.train"],
 
         "parsing_parameters": {
-            "use_label" : 1,
             "autocorrect": 0,
             "synonym_extension": 0,
             "accronym_resolution": 0
@@ -104,7 +90,6 @@
         
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,
             "autocorrect": 0,
             "synonym_extension": 0,
@@ -128,7 +113,6 @@
 
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,
             "autocorrect": 0,
             "synonym_extension": 0,
@@ -152,7 +136,6 @@
 
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,       
             "subclass_of_properties": "all" 
             }
@@ -175,7 +158,6 @@
 
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,
             "subclass_of_properties": "all"      
             }
@@ -196,7 +178,6 @@
 
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1       
             }
     
@@ -218,7 +199,6 @@
     
             "parsing_parameters":
                 {
-                "use_label": 1,
                 "use_synonyms": 1       
                 }
         
@@ -238,7 +218,6 @@
     
             "parsing_parameters":
                 {
-                "use_label": 1,
                 "use_synonyms": 1,
                 "autocorrect": 0,
                 "synonym_extension": 0,
@@ -261,7 +240,6 @@
         
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,
             "autocorrect": 0,
             "synonym_extension": 0,
@@ -286,7 +264,6 @@
 
         "parsing_parameters":
             {
-            "use_label": 1,
             "use_synonyms": 1,
             "autocorrect": 0,
             "synonym_extension": 0,
@@ -312,7 +289,6 @@
     
             "parsing_parameters":
                 {
-                "use_label": 1,
                 "use_synonyms": 1,
                 "autocorrect": 0,
                 "synonym_extension": 0,

@@ -41,7 +41,7 @@ logger = logging.getLogger("onto")
 
 
 class TrainPipeline:
-    def __init__(self, config, tracks, extra_tracks=None, epochs = 75, lr = 1e-5, save_model_checkpoints=-1, 
+    def __init__(self, config, tracks, extra_tracks=None, epochs = 75, lr = 1e-5, save_folder="./store/", save_model_checkpoints=-1, 
                  save_embeddings_checkpoints=-1, model:BaseModel=None, train_walks=None, loader_config=None,
                    run_tasks=True, test_size=0.8, consider_train_set=False, inference_walks=None, inference_config=None, metrics_config=None, 
                  tensorboard_writer: SummaryWriter=None) -> None:
@@ -52,6 +52,9 @@ class TrainPipeline:
 
         self.epochs = epochs
         self.lr = lr
+        self.save_folder = save_folder
+        self.save_path=os.path.join(self.save_folder, '_'.join(self.tracks))
+
         self.save_model_checkpoints = save_model_checkpoints
         self.save_embeddings_checkpoints = save_embeddings_checkpoints
 
@@ -121,9 +124,6 @@ class TrainPipeline:
 
         logger.info("Training started")
 
-        self.save_path=os.path.join(self.config["General"]["save_path"], '_'.join(self.tracks))
-
-
         self.tracks = [Track(track, self.config, metrics_config=self.metrics_config) for track in self.tracks]
         for t in self.tracks:
             t.split_train_test(self.test_size, consider_train_set=self.consider_train_set)
@@ -155,10 +155,6 @@ class TrainPipeline:
     
         string_matcher = StringMatcher()
         string_alignments = string_matcher.run_ontos_map(all_test_tracks.ontologies_map)
-        train_alignments = positive_alignments + string_alignments
-        train_alignments = list(set(train_alignments))
-
-
         train_alignments = positive_alignments + string_alignments
         train_alignments = list(set(train_alignments))
 

@@ -80,11 +80,11 @@ class AlignmentBatchLoader:
 
 
 class IntraNegativeSampler:
-    def __init__(self, ontologies_map, k=10, A=4, no_hard_negative_samples=False, negative_sampling_strategy="ontologic_relation") -> None:
+    def __init__(self, ontologies_map, k=10, A=4, no_hard_negative_samples=False, semi_negative_hop_strategy="ontologic_relation") -> None:
         self.ontologies_map = ontologies_map
         self.A = A
         self.no_hard_negative_samples = no_hard_negative_samples
-        self.strategy = negative_sampling_strategy
+        self.strategy = semi_negative_hop_strategy
 
         self.build_semi_negative_training_set()
         self.semi_negative_index = 0
@@ -151,12 +151,12 @@ class IntraNegativeSampler:
 
 
 class InterNegativeSampler:
-    def __init__(self, ontologies_map: Dict[str, Ontology], alignments: List[Alignment], k=10, A=4, no_hard_negative_samples=False, negative_sampling_strategy="ontologic_relation") -> None:
+    def __init__(self, ontologies_map: Dict[str, Ontology], alignments: List[Alignment], k=10, A=4, no_hard_negative_samples=False, semi_negative_hop_strategy="ontologic_relation") -> None:
         self.ontologies_map = ontologies_map
         self.alignments = alignments
         self.A = A
         self.no_hard_negative_samples = no_hard_negative_samples
-        self.strategy = negative_sampling_strategy
+        self.strategy = semi_negative_hop_strategy
 
 
         self.alignments_with_cousins = []
@@ -242,8 +242,8 @@ class InterNegativeSampler:
 
 
 class SemiNegativeSampling(AlignmentBatchLoader):
-    def __init__(self, ontologies_map, train_positive_alignments, iir=0.8, inter_soft_r=0.5, intra_soft_r=0.0,
-                 no_hard_negative_samples=False, epoch_over_alignments=False, A=4, negative_sampling_strategy="ontologic_relation", **kwargs):
+    def __init__(self, ontologies_map=None, train_positive_alignments=None, iir=0.8, inter_soft_r=0.5, intra_soft_r=0.0,
+                 no_hard_negative_samples=False, epoch_over_alignments=False, A=4, semi_negative_hop_strategy="ontologic_relation", **kwargs):
         """Constructor for the Inter-Intra sampler
 
         Args:
@@ -264,7 +264,7 @@ class SemiNegativeSampling(AlignmentBatchLoader):
         self.alignments = train_positive_alignments
         self.positive_intra_dataset = [(id, onto) for onto in self.ontologies_map for id in self.ontologies_map[onto].classes]
 
-        if len(self.alignments):
+        if len(self.alignments) == 0:
             self.iir = 0.
             self.epoch_over_alignments = False
             if (iir > 0.) or epoch_over_alignments:
@@ -276,8 +276,8 @@ class SemiNegativeSampling(AlignmentBatchLoader):
         self.idx_positive_intra = -1
         self.A = A
 
-        self.intraNegativeSampler = IntraNegativeSampler(ontologies_map, no_hard_negative_samples, A=self.A, negative_sampling_strategy=negative_sampling_strategy)
-        self.interNegativeSampler = InterNegativeSampler(ontologies_map, train_positive_alignments, no_hard_negative_samples, A=self.A, negative_sampling_strategy=negative_sampling_strategy)
+        self.intraNegativeSampler = IntraNegativeSampler(ontologies_map, no_hard_negative_samples, A=self.A, semi_negative_hop_strategy=semi_negative_hop_strategy)
+        self.interNegativeSampler = InterNegativeSampler(ontologies_map, train_positive_alignments, no_hard_negative_samples, A=self.A, semi_negative_hop_strategy=semi_negative_hop_strategy)
 
 
     def _random_concept(self):

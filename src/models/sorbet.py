@@ -63,6 +63,7 @@ class SORBET(BaseModel):
             self.model = AutoModel.from_config(self.model.config).to(Globals.device)
             self.model.init_weights()
         else:
+            Globals.tokenizer = AutoTokenizer.from_pretrained(from_pretrained)
             if "deberta" in from_pretrained:
                 self.model = AutoModel.from_pretrained(from_pretrained).to(Globals.device)
             else:

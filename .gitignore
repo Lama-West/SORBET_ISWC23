@@ -55,4 +55,6 @@ l10n/
 **/cache
 **/debug/**
 **/SORBET
+**/
+**/store
 accronyms.json
