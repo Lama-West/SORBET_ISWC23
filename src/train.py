@@ -44,7 +44,6 @@ logger.info(f"CUDA version: {torch.version.cuda}")
 with open("config.json", 'r') as f:
     config = json.load(f)
 
-Globals.tokenizer = AutoTokenizer.from_pretrained(config["General"]["model"])
 Globals.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -55,7 +54,7 @@ writer = SummaryWriter("./tensorboard/")
 # Pairwise Trainer
 trainer = TrainPipeline(
     config, 
-    ["conference", "anatomy"],
+    ["schema_org"],
     extra_tracks=None,
 
     # SORBET Training parameters
@@ -80,7 +79,7 @@ trainer = TrainPipeline(
     },
 
     # Inference on Ontology Alignment or Subsumption prediction tasks for testing
-    run_tasks=True,
+    run_tasks=False,
     test_size=1.0, 
     consider_train_set=False,
     inference_walks = TreeWalkConfig(strategy=WalkStrategy.ONTOLOGICAL_RELATIONS, n_branches=5),

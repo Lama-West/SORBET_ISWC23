@@ -55,8 +55,6 @@ class SORBET(BaseModel):
         else:
             raise NotImplementedError()
 
-        self.divergence_loss = SentenceEmbeddingLoss()
-        self.subclass_loss = SubclassLoss()
 
         if from_pretrained == "none":
             self.model = AutoModel.from_pretrained("sentence-transformers/all-MiniLM-L6-v2", add_pooling_layer=False, output_hidden_states=True).to(Globals.device)
@@ -68,6 +66,9 @@ class SORBET(BaseModel):
                 self.model = AutoModel.from_pretrained(from_pretrained).to(Globals.device)
             else:
                 self.model = AutoModel.from_pretrained(from_pretrained, add_pooling_layer=False, output_hidden_states=True).to(Globals.device)
+
+        # self.divergence_loss = SentenceEmbeddingLoss()
+        # self.subclass_loss = SubclassLoss()
 
         self.pretrained_model = from_pretrained
 
